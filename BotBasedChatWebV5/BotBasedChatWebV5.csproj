@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <Folder Include="Infrastructure\IdentityMigrations\" />
+    <Folder Include="Infrastructure\AppDataMigrations\" />
   </ItemGroup>
 
 </Project>

@@ -183,12 +183,31 @@
                     this.currentRoom = 0;
                     this.currentRoomMsg = [];
                 },
-                openRoom: function (roomNumber) {
-                    //ajax call, getting all current msgs updated
-                    //1st empty
-                    this.currentRoomMsg = [];
-                    this.currentRoom = roomNumber;
-                    this.drawer = false
+                openRoom: function (roomNumber) {                    
+                    $.ajax(
+                        {
+                            url: '@Url.Action("GetMsgRoom")',
+                            data: { roomId: roomNumber },
+                            success: function (data) {                                    
+                                var dataMsg = [];
+                                if (data != null && data != undefined && data != '') {
+                                    for (var i = 0; i < data.length; i++) {
+                                        dataMsg.push(
+                                            {
+                                                user: data[i].profileUser,
+                                                msg: data[i].data
+                                            });
+                                    }
+                                }                                
+                                nsChat.Vue.currentRoomMsg = dataMsg;
+                                nsChat.Vue.currentRoom = roomNumber;
+                                nsChat.Vue.drawer = false
+                            }, error: function (er1, er2) {
+
+                            }
+                        });
+
+                    
                 },
                 userAction: function (item) {
                     if (item == "Log Out") {
@@ -263,11 +282,6 @@
         connection3.start();
         connection4.start();
     </script>
-
-    @*
-
-
-        <script src="~/js/chat.js"></script>*@
 
 </body>
 </html>

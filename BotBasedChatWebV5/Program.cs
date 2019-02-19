@@ -17,7 +17,11 @@ namespace BotBasedChatWebV5
         public static void Main(string[] args)
         {
             BuildWebHost(args)
-                .MigrateDbContext<ApplicationDbContext>((ctx, services) =>
+            .MigrateDbContext<AppDataContext>((context, services) =>
+            {
+                new AppDataContextSeed().SeedAsync(context).Wait();
+            })
+            .MigrateDbContext<ApplicationDbContext>((ctx, services) =>
             {
             }).Run();
         }
