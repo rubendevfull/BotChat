@@ -152,24 +152,25 @@
                 enterMsg: function () {
                     var msg = this.message;
                     var usr = this.currentUser;
+                    var profile = this.currentProfile;
                     switch (this.currentRoom) {
                         case 1:
-                            connection.invoke("SendMessage", usr, msg).catch(function (err) {
+                            connection.invoke("SendMessage", usr, msg, profile).catch(function (err) {
                                 return console.error(err.toString());
                             });
                             break;
                         case 2:
-                            connection2.invoke("SendMessage", usr, msg).catch(function (err) {
+                            connection2.invoke("SendMessage", usr, msg, profile).catch(function (err) {
                                 return console.error(err.toString());
                             });
                             break;
                         case 3:
-                            connection3.invoke("SendMessage", usr, msg).catch(function (err) {
+                            connection3.invoke("SendMessage", usr, msg, profile).catch(function (err) {
                                 return console.error(err.toString());
                             });
                             break;
                         case 4:
-                            connection4.invoke("SendMessage", usr, msg).catch(function (err) {
+                            connection4.invoke("SendMessage", usr, msg, profile).catch(function (err) {
                                 return console.error(err.toString());
                             });
                             break;
@@ -228,50 +229,50 @@
         var connection3 = new signalR.HubConnectionBuilder().withUrl("/room3Hub").build();
         var connection4 = new signalR.HubConnectionBuilder().withUrl("/room4Hub").build();
 
-        connection.on("ReceiveMessage", function (user, message) {
+        connection.on("ReceiveMessage", function (user, message, profile) {
             if (nsChat.Vue.currentRoom == 1) {
                 var msg = message.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
                 nsChat.Vue.currentRoomMsg.push(
                     {
-                        user: user,
+                        user: profile,
                         msg: msg
                     });
             }
 
         });
 
-        connection2.on("ReceiveMessage", function (user, message) {
+        connection2.on("ReceiveMessage", function (user, message, profile) {
             if (nsChat.Vue.currentRoom == 2) {
                 var msg = message.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
                 nsChat.Vue.currentRoomMsg.push(
                     {
-                        user: user,
+                        user: profile,
                         msg: msg
                     });
             }
         });
 
-        connection3.on("ReceiveMessage", function (user, message) {
+        connection3.on("ReceiveMessage", function (user, message, profile) {
             if (nsChat.Vue.currentRoom == 3) {
                 var msg = message.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
                 nsChat.Vue.currentRoomMsg.push(
                     {
-                        user: user,
+                        user: profile,
                         msg: msg
                     });
             }
         });
 
-        connection4.on("ReceiveMessage", function (user, message) {
+        connection4.on("ReceiveMessage", function (user, message, profile) {
             if (nsChat.Vue.currentRoom == 4) {
                 var msg = message.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
                 nsChat.Vue.currentRoomMsg.push(
                     {
-                        user: user,
+                        user: profile,
                         msg: msg
                     });
             }
