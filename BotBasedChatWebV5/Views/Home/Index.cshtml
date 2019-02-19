@@ -1,0 +1,273 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Security</title>
+    <link rel="Stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons" />
+    <link rel="Stylesheet" href="https://unpkg.com/vuetify/dist/vuetify.min.css" />
+
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/vuetify/dist/vuetify.min.js"></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-1.9.0.js"></script>
+    <script src="~/lib/signalr/dist/browser/signalr.js"></script>
+</head>
+<body>
+    <div id="app">
+
+
+        <v-app id="inspire">
+            <v-navigation-drawer v-model="drawer"
+                                 fixed
+                                 right
+                                 app>
+                <v-list dense>
+                    <v-list-tile @@click="openRoom(1)">
+                        <v-list-tile-action>
+                            <v-icon>contact_mail</v-icon>
+                        </v-list-tile-action>
+                        <v-list-tile-content>
+                            <v-list-tile-title>Room 1</v-list-tile-title>
+                        </v-list-tile-content>
+                    </v-list-tile>
+
+                    <v-list-tile @@click="openRoom(2)">
+                        <v-list-tile-action>
+                            <v-icon>contact_mail</v-icon>
+                        </v-list-tile-action>
+                        <v-list-tile-content>
+                            <v-list-tile-title>Room 2</v-list-tile-title>
+                        </v-list-tile-content>
+                    </v-list-tile>
+
+                    <v-list-tile @@click="openRoom(3)">
+                        <v-list-tile-action>
+                            <v-icon>contact_mail</v-icon>
+                        </v-list-tile-action>
+                        <v-list-tile-content>
+                            <v-list-tile-title>Room 3</v-list-tile-title>
+                        </v-list-tile-content>
+                    </v-list-tile>
+
+                    <v-list-tile @@click="openRoom(4)">
+                        <v-list-tile-action>
+                            <v-icon>contact_mail</v-icon>
+                        </v-list-tile-action>
+                        <v-list-tile-content>
+                            <v-list-tile-title>Room 4</v-list-tile-title>
+                        </v-list-tile-content>
+                    </v-list-tile>
+
+
+                </v-list>
+            </v-navigation-drawer>
+            <v-toolbar color="cyan" dark fixed app>
+                <v-menu offset-y>
+                    <v-btn slot="activator"
+                           color="primary"
+                           dark>
+                        {{currentUser}} - {{currentProfile}}
+                    </v-btn>
+                    <v-list>
+                        <v-list-tile v-for="(item, index) in menuUser"
+                                     :key="index"
+                                     @@click="userAction(item)">
+                            <v-list-tile-title>{{ item }}</v-list-tile-title>
+                        </v-list-tile>
+                    </v-list>
+                </v-menu>
+                <v-spacer></v-spacer>
+                <v-toolbar-title>Select Room</v-toolbar-title>
+                <v-toolbar-side-icon @@click.stop="drawer = !drawer"></v-toolbar-side-icon>
+            </v-toolbar>
+
+            <v-content v-if="currentRoom != 0">
+                <v-flex xs12 sm12 md12 text-xs-right>
+                    <v-btn v-on:click="" color="primary">Room: {{currentRoom}}</v-btn>
+                    <v-btn v-on:click="exitRoom" color="primary">Exit Room</v-btn>
+                </v-flex>
+                <v-container fluid fill-height>
+
+                    <v-layout justify-center align-center>
+                        <v-flex xs12>
+
+                            <v-container id="scroll-target"
+                                         style="max-height: 600px"
+                                         class="scroll-y">
+                                <v-layout v-scroll:#scroll-target=""
+                                          column
+                                          align-left
+                                          justify-center
+                                          style="height: 1000px">
+
+                                    <v-chip v-for="msg in currentRoomMsg">
+                                        <v-avatar class="teal">A</v-avatar>
+                                        {{msg.user}} : {{msg.msg}}
+                                    </v-chip>
+
+                                </v-layout>
+                            </v-container>
+                            <v-flex xs12>
+                                <v-text-field v-model="message"
+                                              box
+                                              clear-icon="mdi-close-circle"
+                                              clearable
+                                              label="Type message here"
+                                              type="text"
+                                              v-on:keyup.enter="enterMsg"></v-text-field>
+                            </v-flex>
+                        </v-flex>
+                    </v-layout>
+                </v-container>
+            </v-content>
+
+
+            <v-footer color="cyan" app>
+                <v-spacer></v-spacer>
+                <span class="white--text">&copy; Ruben Dario Andrade Manrique @DateTime.Now.Year</span>
+            </v-footer>
+        </v-app>
+
+    </div>
+
+    <script>
+        var nsChat = nsChat || {};
+
+        nsChat.Vue = new Vue({
+            el: '#app',
+            data: {
+                message: "",
+                currentRoom: 0,
+                currentUser: '@ViewBag.UserName',
+                currentProfile: "Profile Test",
+                drawer: false,
+                menuUser: ["Create Profile", "Log Out"],
+                currentRoomMsg:[]
+            },
+            methods: {
+                enterMsg: function () {
+                    var msg = this.message;
+                    var usr = this.currentUser;
+                    switch (this.currentRoom) {
+                        case 1:
+                            connection.invoke("SendMessage", usr, msg).catch(function (err) {
+                                return console.error(err.toString());
+                            });
+                            break;
+                        case 2:
+                            connection2.invoke("SendMessage", usr, msg).catch(function (err) {
+                                return console.error(err.toString());
+                            });
+                            break;
+                        case 3:
+                            connection3.invoke("SendMessage", usr, msg).catch(function (err) {
+                                return console.error(err.toString());
+                            });
+                            break;
+                        case 4:
+                            connection4.invoke("SendMessage", usr, msg).catch(function (err) {
+                                return console.error(err.toString());
+                            });
+                            break;
+                    }
+
+
+                    this.message = "";
+
+                },
+                exitRoom: function () {
+                    this.currentRoom = 0;
+                    this.currentRoomMsg = [];
+                },
+                openRoom: function (roomNumber) {
+                    //ajax call, getting all current msgs updated
+                    //1st empty
+                    this.currentRoomMsg = [];
+                    this.currentRoom = roomNumber;
+                    this.drawer = false
+                },
+                userAction: function (item) {
+                    if (item == "Log Out") {
+                        window.location.href = '@Url.Action("Logout", "Security")';
+                    }
+                }
+            },
+            props: {
+                source: String
+            }
+        });
+
+
+        "use strict";
+
+        var connection = new signalR.HubConnectionBuilder().withUrl("/room1Hub").build();
+        var connection2 = new signalR.HubConnectionBuilder().withUrl("/room2Hub").build();
+        var connection3 = new signalR.HubConnectionBuilder().withUrl("/room3Hub").build();
+        var connection4 = new signalR.HubConnectionBuilder().withUrl("/room4Hub").build();
+
+        connection.on("ReceiveMessage", function (user, message) {
+            if (nsChat.Vue.currentRoom == 1) {
+                var msg = message.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+                nsChat.Vue.currentRoomMsg.push(
+                    {
+                        user: user,
+                        msg: msg
+                    });
+            }
+
+        });
+
+        connection2.on("ReceiveMessage", function (user, message) {
+            if (nsChat.Vue.currentRoom == 2) {
+                var msg = message.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+                nsChat.Vue.currentRoomMsg.push(
+                    {
+                        user: user,
+                        msg: msg
+                    });
+            }
+        });
+
+        connection3.on("ReceiveMessage", function (user, message) {
+            if (nsChat.Vue.currentRoom == 3) {
+                var msg = message.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+                nsChat.Vue.currentRoomMsg.push(
+                    {
+                        user: user,
+                        msg: msg
+                    });
+            }
+        });
+
+        connection4.on("ReceiveMessage", function (user, message) {
+            if (nsChat.Vue.currentRoom == 4) {
+                var msg = message.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+                nsChat.Vue.currentRoomMsg.push(
+                    {
+                        user: user,
+                        msg: msg
+                    });
+            }
+        });
+
+        connection.start();
+        connection2.start();
+        connection3.start();
+        connection4.start();
+    </script>
+
+    @*
+
+
+        <script src="~/js/chat.js"></script>*@
+
+</body>
+</html>

@@ -1,0 +1,253 @@
+﻿
+@page
+@*@model LoginModel*@
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Security</title>
+    <link rel="Stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons" />
+    <link rel="Stylesheet" href="https://unpkg.com/vuetify/dist/vuetify.min.css" />
+
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/vuetify/dist/vuetify.min.js"></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-1.9.0.js"></script>
+</head>
+<body>
+    <div id="app">
+        <v-app id="inspire">
+            <v-content>
+                <v-container fluid fill-height>
+                    <v-layout align-center justify-center>
+                        <v-flex xs12 sm8 md4>
+
+                            <v-card v-if="onLogin == true" class="elevation-12">
+                                <v-toolbar dark color="primary">
+                                    <v-toolbar-title>Login form</v-toolbar-title>
+                                    <v-spacer></v-spacer>
+
+                                </v-toolbar>
+                                <v-card-text>
+                                    <v-form>
+                                        <v-text-field prepend-icon="person" name="login" label="Email" type="text" v-model="loginName"></v-text-field>
+                                        <v-text-field prepend-icon="lock" name="password" label="Password" id="password" type="password" v-model="loginPass"></v-text-field>
+                                    </v-form>
+                                </v-card-text>
+                                <v-card-actions>
+                                    <v-btn v-on:click="toSignUp" color="success">New? Sign Up</v-btn>
+                                    <v-spacer></v-spacer>
+                                    <v-btn v-on:click="toLogIn" :disabled="(loginName == null || loginName == '') || (loginPass == null || loginPass == '')" color="primary">Login</v-btn>
+                                </v-card-actions>
+                            </v-card>
+
+
+                            <v-card v-if="onLogin == false" class="elevation-12">
+                                <v-toolbar dark color="primary">
+                                    <v-toolbar-title>Sign up form</v-toolbar-title>
+                                    <v-spacer></v-spacer>
+
+                                </v-toolbar>
+                                <v-card-text>
+                                    <v-form>
+                                        <v-text-field prepend-icon="person" name="signLogin" label="Email" type="text" v-model="signLogin"></v-text-field>
+                                        <v-text-field prepend-icon="lock" name="signPass" label="Password" id="password" type="password" v-model="signPass"></v-text-field>
+                                        <v-text-field prepend-icon="lock" name="signPassRepeat" label="Password Verify" id="passwordRepeat" type="password" v-model="signPassRepeat"></v-text-field>
+                                        <v-text-field prepend-icon="person" name="signPassProfile" label="Profile Name" type="text" v-model="signPassProfile"></v-text-field>
+                                    </v-form>
+                                </v-card-text>
+                                <v-card-actions>
+                                    <v-btn v-on:click="backLogin" color="primary">Back to Login</v-btn>
+                                    <v-spacer></v-spacer>
+                                    <v-btn :disabled="(signLogin == null || signLogin == '') || (signPass == null || signPass == '')
+                                               || (signPassRepeat == null || signPassRepeat == '') || (signPassProfile == null || signPassProfile == '')"
+                                           v-on:click="signUp" color="success">Sign Up</v-btn>
+                                </v-card-actions>
+                            </v-card>
+                        </v-flex>
+                    </v-layout>
+                </v-container>
+
+                <v-snackbar v-model="snackbar" :multiline="true"
+                            :top="true"
+                            :timeout=6000>
+                    {{notiMsg}}
+                    <v-btn dark
+                           flat
+                           @@click="snackbar = false">
+                        Close
+                    </v-btn>
+                </v-snackbar>
+
+            </v-content>
+        </v-app>
+    </div>
+
+    <script>
+            var nsLog = nsLog || {};
+
+            nsLog.Vue = new Vue({
+                el: '#app',
+                data: {
+                    onLogin: true,
+                    loginName: null,
+                    loginPass: null,
+                    notiMsg: "",
+                    snackbar:false,
+                    signLogin: "",//"rubenandrade201@gmail.com",
+                    signPass: "",//"1234",
+                    signPassRepeat: "",//"1234",
+                    signPassProfile: ""//"ruben201"
+                },
+                methods: {
+                    toLogIn: function () {
+                        $.ajax(
+                            {
+                                url: '@Url.Action("Login", "Security")',
+                                type: 'post',
+                                data: {
+                                    user: nsLog.Vue.loginName,
+                                    pass: nsLog.Vue.loginPass
+                                },
+                                success: function (rp) {
+                                    if (rp.status) {
+                                        window.location.href = "/Home/Index";
+                                    } else {
+                                        nsLog.Vue.notiMsg = "";
+                                        var msg = "";
+                                        for (var i = 0; i < rp.msgBad.length; i++) {
+                                            msg += rp.msgBad[i] + ",";
+                                        }
+                                        nsLog.Vue.notiMsg = msg;
+                                        nsLog.Vue.snackbar = true;
+                                    }
+                                }, error: function (er1, er2) {
+                                    alert(er1 + er2);
+                                }
+                            });
+                    },
+                    signUp: function () {
+                        $.ajax(
+                            {
+                                url: '@Url.Action("SignUp", "Security")',
+                                type: 'post',
+                                data: {
+                                    mail: nsLog.Vue.signLogin,
+                                    pass : nsLog.Vue.signPass,
+                                    profileMetadata: nsLog.Vue.signPassProfile
+                                },
+                                success: function (rp) {
+                                    if (rp.status) {
+                                        window.location.href = "/Home/Index";
+                                    } else {
+                                        nsLog.Vue.notiMsg = "";
+                                        var msg = "";
+                                        for (var i = 0; i < rp.msgBad.length; i++) {
+                                            msg += rp.msgBad[i] + ",";
+                                        }
+                                        nsLog.Vue.notiMsg = msg;
+                                        nsLog.Vue.snackbar = true;
+                                    }
+                                },error: function (er1, er2) {
+                                    alert(er1 + er2);
+                                }
+                            });
+                    },
+                    toSignUp: function () {
+                        this.onLogin = false
+                    },
+                    backLogin: function () {
+                        this.onLogin= true
+                    }
+                }
+            })
+    </script>
+</body>
+</html>
+
+@*@page
+    @model LoginModel
+
+    @{
+        ViewData["Title"] = "Log in";
+    }
+
+    <h1>@ViewData["Title"]</h1>
+    <div class="row">
+        <div class="col-md-4">
+            <section>
+                <form id="account" method="post">
+                    <h4>Use a local account to log in.</h4>
+                    <hr />
+                    <div asp-validation-summary="All" class="text-danger"></div>
+                    <div class="form-group">
+                        <label asp-for="Input.Email"></label>
+                        <input asp-for="Input.Email" class="form-control" />
+                        <span asp-validation-for="Input.Email" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Input.Password"></label>
+                        <input asp-for="Input.Password" class="form-control" />
+                        <span asp-validation-for="Input.Password" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <div class="checkbox">
+                            <label asp-for="Input.RememberMe">
+                                <input asp-for="Input.RememberMe" />
+                                @Html.DisplayNameFor(m => m.Input.RememberMe)
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary">Log in</button>
+                    </div>
+                    <div class="form-group">
+                        <p>
+                            <a id="forgot-password" asp-page="./ForgotPassword">Forgot your password?</a>
+                        </p>
+                        <p>
+                            <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Register as a new user</a>
+                        </p>
+                    </div>
+                </form>
+            </section>
+        </div>
+        <div class="col-md-6 col-md-offset-2">
+            <section>
+                <h4>Use another service to log in.</h4>
+                <hr />
+                @{
+                    if ((Model.ExternalLogins?.Count ?? 0) == 0)
+                    {
+                        <div>
+                            <p>
+                                There are no external authentication services configured. See <a href="https://go.microsoft.com/fwlink/?LinkID=532715">this article</a>
+                                for details on setting up this ASP.NET application to support logging in via external services.
+                            </p>
+                        </div>
+                    }
+                    else
+                    {
+                        <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
+                            <div>
+                                <p>
+                                    @foreach (var provider in Model.ExternalLogins)
+                                    {
+                                        <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
+                                    }
+                                </p>
+                            </div>
+                        </form>
+                    }
+                }
+            </section>
+        </div>
+    </div>
+
+    @section Scripts {
+        <partial name="_ValidationScriptsPartial" />
+    }*@
