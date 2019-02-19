@@ -17,19 +17,21 @@ namespace BotBasedChatWebV5.Controllers
     {
         private readonly UserManager<UserIdentity> _userManager;
         private readonly IMessageQueries _messageQueries;
-
         
-
         public HomeController(UserManager<UserIdentity> userManager,
             IMessageQueries messageQueries)
         {
             _messageQueries = messageQueries;
             _userManager = userManager;
         }
+
+
         public async Task<IActionResult> Index()
         {
             var dataUser = await _userManager.GetUserAsync(HttpContext.User);
+            var profile = await _userManager.GetClaimsAsync(dataUser);
             ViewBag.UserName = dataUser.UserName;//"testBurden"; 
+            ViewBag.UserProfile = profile.FirstOrDefault().Value;//"testBurden"; 
             return View();
         }
 
