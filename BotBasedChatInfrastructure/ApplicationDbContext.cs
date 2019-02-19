@@ -21,20 +21,43 @@ namespace BotBasedChatInfrastructure
         public static async Task SeedAccounts(UserManager<UserIdentity> userManager,
             IConfiguration configuration)
         {
-            //string userName = configuration["SeedDataIdentity:superAdmin:Name"];
-            //string email = configuration["SeedDataIdentity:superAdmin:Email"];
-            //string password = configuration["SeedDataIdentity:superAdmin:Password"];
+            string user1Email = configuration["SeedDataIdentity:user1:Email"];
+            string user1Password = configuration["SeedDataIdentity:user1:Password"];
+            string user1Profile = configuration["SeedDataIdentity:user1:Profile"];
 
-            //if (await userManager.FindByNameAsync(userName) == null)
-            //{
-            //    var superUser = new UserIdentity();
-            //    superUser.UserName = userName;
-            //    superUser.Email = email;
+            if (await userManager.FindByNameAsync(user1Email) == null)
+            {
+                var user1 = new UserIdentity();
+                user1.UserName = user1Email;
+                user1.Email = user1Email;
 
-            //    var identityResult = await userManager.CreateAsync(superUser, password);
-            //    if (!identityResult.Succeeded)
-            //        throw new Exception("Super user was not created");
-            //}
+                var identityResult = await userManager.CreateAsync(user1, user1Password);
+                if (!identityResult.Succeeded)
+                    throw new Exception("first user was not created");
+
+                
+                await userManager.AddClaimAsync(user1, new System.Security.Claims.Claim("profile", user1Profile));
+                                        
+                
+
+            }
+
+            string user2Email = configuration["SeedDataIdentity:user2:Email"];
+            string user2Password = configuration["SeedDataIdentity:user2:Password"];
+            string user2Profile = configuration["SeedDataIdentity:user2:Profile"];
+
+            if (await userManager.FindByNameAsync(user2Email) == null)
+            {
+                var user2 = new UserIdentity();
+                user2.UserName = user2Email;
+                user2.Email = user2Email;
+
+                var identityResult = await userManager.CreateAsync(user2, user2Password);
+                if (!identityResult.Succeeded)
+                    throw new Exception("first user was not created");
+
+                await userManager.AddClaimAsync(user2, new System.Security.Claims.Claim("profile", user2Profile));
+            }
 
         }
     }

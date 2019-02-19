@@ -155,6 +155,7 @@
                     var profile = this.currentProfile;
                     switch (this.currentRoom) {
                         case 1:
+                            debugger
                             connection.invoke("SendMessage", usr, msg, profile).catch(function (err) {
                                 return console.error(err.toString());
                             });
@@ -228,7 +229,7 @@
         var connection2 = new signalR.HubConnectionBuilder().withUrl("/room2Hub").build();
         var connection3 = new signalR.HubConnectionBuilder().withUrl("/room3Hub").build();
         var connection4 = new signalR.HubConnectionBuilder().withUrl("/room4Hub").build();
-
+    
         connection.on("ReceiveMessage", function (user, message, profile) {
             if (nsChat.Vue.currentRoom == 1) {
                 var msg = message.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using BotBaseChatDomain.MessagesAggregate;
 using BotBasedChatInfrastructure.ModelSecurity;
 using BotBasedChatWebV5.Application.Queries.Messages;
+using BotBasedChatWebV5.Hubs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
