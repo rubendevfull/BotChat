@@ -5,11 +5,15 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using BotBaseChatDomain.MessagesAggregate;
 using BotBasedChatInfrastructure;
 using BotBasedChatInfrastructure.ModelSecurity;
+using BotBasedChatInfrastructure.Repositories;
 using BotBasedChatWebV5.Application.Queries.Messages;
 using BotBasedChatWebV5.Hubs;
 using BotBasedChatWebV5.Infrastructure.AutofacModules;
+using BotBasedChatWebV5.Services.Csv;
+using BotBasedChatWebV5.Services.MessageBroker;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -23,7 +27,7 @@ namespace BotBasedChatWebV5
 {
     public class Startup
     {
-
+        public static IServiceProvider __serviceProvider;
         public IConfiguration Configuration { get; }
 
         public Startup(IConfiguration configuration)
@@ -35,10 +39,10 @@ namespace BotBasedChatWebV5
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ApplicationDbContext>(options =>
+            services.AddDbContext<ApplicationDbContext>(options =>                   
                 options.UseSqlServer(Configuration["ConnectionStrings:Identity"],
                 sqlServerOptionsAction: sqlOptions =>
-                {
+                {                    
                     sqlOptions.MigrationsAssembly(typeof(Startup).GetTypeInfo().Assembly.GetName().Name);
                 }));
 
@@ -84,6 +88,12 @@ namespace BotBasedChatWebV5
             services.AddSignalR();
 
             services.AddTransient<IMessageQueries, MessageQueries>();
+            services.AddTransient<IMessageBroker, MessageBroker>();
+            services.AddTransient<IMessageRepository, MessageRepository>();
+             
+            services.AddTransient<ICsvBot, CsvBot>();
+            
+            __serviceProvider = services.BuildServiceProvider();
 
             var container = new ContainerBuilder();
             container.Populate(services);
@@ -100,7 +110,8 @@ namespace BotBasedChatWebV5
             }
 
             app.UseStaticFiles();
-            //app.UseSession();
+
+
             app.UseSignalR(routes =>
             {                
                 routes.MapHub<Room1Hub>("/room1Hub");

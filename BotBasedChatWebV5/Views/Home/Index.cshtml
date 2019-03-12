@@ -155,7 +155,7 @@
                     var profile = this.currentProfile;
                     switch (this.currentRoom) {
                         case 1:
-                            debugger
+                            //debugger
                             connection.invoke("SendMessage", usr, msg, profile).catch(function (err) {
                                 return console.error(err.toString());
                             });
@@ -233,12 +233,15 @@
         connection.on("ReceiveMessage", function (user, message, profile) {
             if (nsChat.Vue.currentRoom == 1) {
                 var msg = message.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-
+                
                 nsChat.Vue.currentRoomMsg.push(
                     {
                         user: profile,
                         msg: msg
                     });
+                if (nsChat.Vue.currentRoomMsg.length > 50) {                    
+                    nsChat.Vue.currentRoomMsg.shift();
+                }
             }
 
         });
@@ -252,6 +255,9 @@
                         user: profile,
                         msg: msg
                     });
+                if (nsChat.Vue.currentRoomMsg.length > 50) {
+                    nsChat.Vue.currentRoomMsg.shift();
+                }
             }
         });
 
@@ -264,6 +270,9 @@
                         user: profile,
                         msg: msg
                     });
+                if (nsChat.Vue.currentRoomMsg.length > 50) {
+                    nsChat.Vue.currentRoomMsg.shift();
+                }
             }
         });
 
@@ -276,6 +285,9 @@
                         user: profile,
                         msg: msg
                     });
+                if (nsChat.Vue.currentRoomMsg.length > 50) {
+                    nsChat.Vue.currentRoomMsg.shift();
+                }
             }
         });
 

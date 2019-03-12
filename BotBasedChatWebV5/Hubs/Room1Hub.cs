@@ -1,7 +1,10 @@
 ﻿using BotBaseChatDomain.MessagesAggregate;
+using BotBasedChatInfrastructure;
 using BotBasedChatInfrastructure.Repositories;
 using BotBasedChatWebV5.Application.Commands;
 using BotBasedChatWebV5.Application.Commands.Message;
+using BotBasedChatWebV5.Application.Queries.Messages;
+using BotBasedChatWebV5.Services.MessageBroker;
 using MediatR;
 using Microsoft.AspNetCore.SignalR;
 using System;
@@ -13,19 +16,25 @@ namespace BotBasedChatWebV5.Hubs
 {
     public class Room1Hub : Hub
     {
-        //private readonly IMessageRepository _repo;        
-        //public Room1Hub(IMessageRepository repo)
-        //{
-        //    _repo = repo;
-        //}
+        public IMessageQueries _messageQueries { get; set; }
+        public IMessageBroker _messagebroker { get; set; }
+        public Room1Hub()
+        {
+            _messageQueries = (IMessageQueries)Startup.__serviceProvider.GetService(typeof(IMessageQueries));
+            _messagebroker = (IMessageBroker)Startup.__serviceProvider.GetService(typeof(IMessageBroker));
+        }
+       
+
         public async Task SendMessage(string user, string message, string profile)
         {
-            
-            var command = new MessageAddCommand(user, profile, message, 1);            
+
+            //var command = new MessageAddCommand(user, profile, message, 1);            
             //var identifiedCommand = new IdentifiedCommand<MessageAddCommand, int>(command, new Guid());
             //var resultCommand = await _mediator.Send(command);
             //if(resultCommand > 0)
-            await Clients.All.SendAsync("ReceiveMessage", user, message, profile);
+            await _messagebroker.ManageMessageAsync(user, message, profile, Clients, 1);
+
+            //await Clients.All.SendAsync("ReceiveMessage", user, message, profile);
         }
     }
 }

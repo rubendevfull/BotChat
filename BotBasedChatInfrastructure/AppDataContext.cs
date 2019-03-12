@@ -11,10 +11,10 @@ namespace BotBasedChatInfrastructure
     {
         public DbSet<Message> Messages { get; set; }
 
+        
 
         public AppDataContext(DbContextOptions<AppDataContext> options) : base(options)
-        {
-
+        {            
         }
         protected override void OnModelCreating(ModelBuilder builder)
         {

@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BotBasedChatInfrastructure"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BotBasedChatWebV5", "BotBasedChatWebV5\BotBasedChatWebV5.csproj", "{FF449140-CECD-488C-A079-E44B31E17390}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BotBasedChatTest", "BotBasedChatTest\BotBasedChatTest.csproj", "{9F43F59F-A48F-4446-9A5B-331E69CB585E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{FF449140-CECD-488C-A079-E44B31E17390}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FF449140-CECD-488C-A079-E44B31E17390}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FF449140-CECD-488C-A079-E44B31E17390}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9F43F59F-A48F-4446-9A5B-331E69CB585E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9F43F59F-A48F-4446-9A5B-331E69CB585E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9F43F59F-A48F-4446-9A5B-331E69CB585E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9F43F59F-A48F-4446-9A5B-331E69CB585E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

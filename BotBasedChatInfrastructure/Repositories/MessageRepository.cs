@@ -15,7 +15,9 @@ namespace BotBasedChatInfrastructure.Repositories
         }
         public Message Add(Message msg)
         {
-            return _context.Messages.Add(msg).Entity;
+            var entity = _context.Messages.Add(msg).Entity;
+            _context.SaveChanges();
+            return entity;
         }
     }
 }
