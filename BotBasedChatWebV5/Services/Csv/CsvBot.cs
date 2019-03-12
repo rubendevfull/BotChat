@@ -6,17 +6,25 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using BotBasedChatWebV5.Model;
 using CsvHelper;
+using Microsoft.Extensions.Configuration;
 
 namespace BotBasedChatWebV5.Services.Csv
 {
     public class CsvBot : ICsvBot
     {
+        public IConfiguration Configuration { get; }
+
+        public CsvBot(IConfiguration configuration)
+        {
+            Configuration = configuration;
+        }
+
         public async Task<ResponseBasicVm> GetCsvAsync(string token)
         {
             var rp = new ResponseBasicVm();
             try
             {
-                string baseUrl = "https://stooq.com/q/l/?s=" + token + ".us&f=sd2t2ohlcv&h&e=csv";
+                string baseUrl = Configuration["csvEndpointFirst"] + token + Configuration["csvEndpointSecond"];// "https://stooq.com/q/l/?s=" + token + ".us&f=sd2t2ohlcv&h&e=csv";
                 //The 'using' will help to prevent memory leaks.
                 //Create a new instance of HttpClient
                 using (HttpClient client = new HttpClient())

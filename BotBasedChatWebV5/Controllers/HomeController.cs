@@ -10,18 +10,21 @@ using BotBasedChatWebV5.Hubs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 
 namespace BotBasedChatWebV5.Controllers
 {
     [Authorize]
     public class HomeController : Controller
     {
+        
         private readonly UserManager<UserIdentity> _userManager;
         private readonly IMessageQueries _messageQueries;
         
         public HomeController(UserManager<UserIdentity> userManager,
             IMessageQueries messageQueries)
         {
+           
             _messageQueries = messageQueries;
             _userManager = userManager;
         }

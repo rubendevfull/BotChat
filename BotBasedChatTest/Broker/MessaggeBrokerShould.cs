@@ -3,6 +3,8 @@ using BotBasedChatInfrastructure.Repositories;
 using BotBasedChatWebV5.Services.Csv;
 using BotBasedChatWebV5.Services.MessageBroker;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Moq;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -20,12 +22,13 @@ namespace BotBasedChatTest.Broker
         [InlineData("/stock=d​")]
         public void IsValidCsvCallApiFormat(string message)
         {
+            var mockConfiguration = new Mock<IConfiguration>();
             var dbOpt = new DbContextOptionsBuilder<AppDataContext>()
                 .UseInMemoryDatabase(databaseName: "Add_writes_to_database")
                 .Options;
             using (var ctx = new AppDataContext(dbOpt))
             {
-                var sut = new MessageBroker(new CsvBot(), new MessageRepository(ctx));
+                var sut = new MessageBroker(new CsvBot(mockConfiguration.Object), new MessageRepository(ctx));
                 var okObjectResult = sut.CheckMessageFormat(message);
                 Assert.True(okObjectResult.Status);
             }                               
@@ -38,12 +41,13 @@ namespace BotBasedChatTest.Broker
         [InlineData("/stock=d%(/#$#")]
         public void IsNotValidCsvCallApiFormat(string message)
         {
+            var mockConfiguration = new Mock<IConfiguration>();
             var dbOpt = new DbContextOptionsBuilder<AppDataContext>()
                 .UseInMemoryDatabase(databaseName: "Add_writes_to_database")
                 .Options;
             using (var ctx = new AppDataContext(dbOpt))
             {
-                var sut = new MessageBroker(new CsvBot(), new MessageRepository(ctx));
+                var sut = new MessageBroker(new CsvBot(mockConfiguration.Object), new MessageRepository(ctx));
                 var okObjectResult = sut.CheckMessageFormat(message);
                 Assert.False(okObjectResult.Status);
             }
