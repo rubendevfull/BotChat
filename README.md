@@ -32,12 +32,17 @@ It has an infrastructure layer which is in charge of the implementation of Domai
 It has an MVC razor .Net core project to display the pages and bring JSON data to the client calls. In his heart, it uses Vue Js framework to render Vuetify client components. It Uses ID native for .Net core to use any service of the application. It also has command pattern used with MediaTR to make the ACID transactions that makes changes in DB. It uses Signal R Hubs to spread the messages coming to subscribers’ clients.
 As security, it implements .Net Core identity 2.2 and authorization browser cookie based to grant access to specific parts of the application. It uses claims to get specific profile information user.
 
+Update!!
+CSV Consumption it is done. Using HttpClient it calls endpoint to get a CSV string response which it serializes to a specific model for MVC service process. It receives commands with structure "/stock=aapl" so in case that "aapl" part is valid for stock market value, it will return the range value market
+Db persistent it is done now. Using an injection .net core trick, I could use services into a Signal R hub in order to complete the persistence functionality in the application
+Unit test is done now. 9 unit test results have been created. It focuses on specific Broker functionality using Mocking of objects and specific commands "/stock=aapl" like.
+Error handling is based on ResponseBasicVm strategy which allows having a general exception control of the application wrapping the responses over specific ResponseBasicVm object.
+Size of last messages now is defined by "stackMessages" value in the configuration file.
+
 To-do
-CSV Consumption: I did not enough time to develop a reliable implementation of HTTP service. The idea is to have an Idempotency and resilience project to use in web project service to make the calls to the any API.
-RabbitMQ: I have not used before this bus, however its popularity, so I spent the major time working with Signal R, so I think it is a matter of time too.
-DB persistant of messages in DB: I had a problem injecting MediaTR library on Signal R Hubs doing simply. It needs a little bit more of experience with Signal R in order to do it, so I think it is a matter of time.
-Profiles: I had the idea to offer to the user change/create data related with its profile. Again, I think it is a matter of time.
-Unit Test: I totally agree it is a matter of time, due many implementations in core can be successfully tested by its DI programming way.
+CSV Consumption: I did not enough time to develop an abstract HTTP service implementation which allows having a mock-able code.
+RabbitMQ: I have not used before this bus, however its popularity, so I spent the major time solving the fixed Signal R issues, so I think it is a matter of time too.
+Profiles: I had the idea to offer to the user change/create data related to its profile. Again, I think it is a matter of time.
 
 
 BotChat
